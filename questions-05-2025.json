@@ -1,0 +1,453 @@
+{
+  "version": "05-2025",
+  "title": "AWS SAA-C03 - May 2025 Edition",
+  "questions": [
+    {
+      "id": 1294,
+      "question": "A telemarketing company is designing its customer call center functionality on AWS. The company needs a solution that provides multiple speaker recognition and generates transcript files. The company wants to query the transcript files to analyze the business patterns. Which solution will meet these requirements?",
+      "options": {
+        "A": "Store the transcript files in Amazon S3. Use machine learning models in Amazon SageMaker to analyze the business patterns.",
+        "B": "Use Amazon Transcribe for multiple speaker recognition. Use Amazon Athena to query the transcript files.",
+        "C": "Store the transcript files in Amazon Redshift. Use SQL queries in Redshift to analyze the business patterns.",
+        "D": "Store the transcript files in Amazon S3. Use Amazon Textract to recognize multiple speakers and to analyze the business patterns."
+      },
+      "correct": ["B"],
+      "explanation": "Amazon Transcribe supports speaker diarization (multiple speaker recognition) and outputs transcripts to S3. Amazon Athena can then query those transcripts using standard SQL directly against S3, making this the most appropriate and cost-effective solution."
+    },
+    {
+      "id": 1295,
+      "question": "A media company runs an application on multiple Amazon EC2 instances that requires high storage input/output operations per second (IOPS). To achieve the necessary performance, a solutions architect wants to stripe multiple Amazon EBS volumes together and attach the volumes to EC2 instances. The solutions architect wants to receive a notification when IOPS are over-provisioned. Which solution will meet these requirements?",
+      "options": {
+        "A": "Configure auto scaling for the EBS volumes to automatically increase or decrease IOPS based on the EC2 instance CPU utilization metric.",
+        "B": "Deploy the application on an EC2 instance type that supports the highest possible IOPS.",
+        "C": "Create a custom AWS Config rule to monitor the provisioned IOPS for the EBS volumes that are attached to the EC2 instances and to send notifications.",
+        "D": "Adjust the IOPS of each EBS volume daily based on Amazon CloudWatch metrics for IOPS utilization."
+      },
+      "correct": ["C"],
+      "explanation": "AWS Config rules can monitor EBS volume configurations including provisioned IOPS and trigger notifications via SNS when thresholds are exceeded, satisfying both the monitoring and notification requirements."
+    },
+    {
+      "id": 1296,
+      "question": "A company hosts an application on AWS. The application has generated a large amount of data. A solutions architect needs a storage solution for the data. The data is rarely accessed. The company needs a solution that is durable and available and that can retrieve the data quickly. Which solution will meet these requirements MOST cost-effectively?",
+      "options": {
+        "A": "Create EBS snapshots to back up the data. Create an Amazon S3 bucket to store the snapshots.",
+        "B": "Create an Amazon S3 bucket. Use the S3 Glacier Deep Archive storage class to store the data.",
+        "C": "Create an Amazon S3 bucket. Use the S3 Glacier Flexible Retrieval storage class to store the data.",
+        "D": "Create an Amazon Elastic File System (Amazon EFS) file system. Store the data in EFS."
+      },
+      "correct": ["C"],
+      "explanation": "S3 Glacier Flexible Retrieval offers low-cost archival storage with retrieval times of minutes to hours, which satisfies the requirement of being able to retrieve the data quickly at the most cost-effective price point compared to standard S3 or EFS."
+    },
+    {
+      "id": 1297,
+      "question": "A company runs a web application in a single AWS Region. A solutions architect wants to ensure that the web application can continue to operate if the application becomes unavailable in the Region. Which solution will meet this requirement?",
+      "options": {
+        "A": "Deploy the application in multiple Regions. Use Amazon Route 53 DNS health checks to route traffic to a healthy Region.",
+        "B": "Deploy the application in multiple Availability Zones within a single Region. Use Amazon Route 53 DNS health checks to route traffic to healthy application resources.",
+        "C": "Deploy the application in multiple Regions. Use an Amazon Route 53 simple routing record to route traffic to a healthy Region.",
+        "D": "Deploy the application in multiple Availability Zones within a single Region. Use an Amazon Route 53 latency record in each Availability Zone to route traffic to a healthy Availability Zone."
+      },
+      "correct": ["A"],
+      "explanation": "Deploying across multiple AWS Regions provides protection against a full regional outage. Route 53 DNS health checks with failover routing can detect when the primary region becomes unavailable and automatically route traffic to a healthy secondary region."
+    },
+    {
+      "id": 1298,
+      "question": "A company has a single AWS account that contains resources belonging to two teams. Team A and Team B. The company wants to track costs by team and provide reports to management. Which combination of solutions will meet these requirements? (Choose two.)",
+      "options": {
+        "A": "Tag all resources that belong to each team with the user-defined tag key CostCenter and a value of TeamA or TeamB.",
+        "B": "Create a tag for each team, and set the value to CostCenter.",
+        "C": "Activate the CostCenter tag to track cost allocation.",
+        "D": "Configure AWS Billing and Cost Management to send monthly invoices to each team.",
+        "E": "Set up consolidated billing in the existing AWS account."
+      },
+      "correct": ["A", "C"],
+      "explanation": "To track costs by team, first tag all resources with a user-defined key (CostCenter) and values (TeamA/TeamB), then activate that tag as a cost allocation tag in AWS Billing and Cost Management so it appears in cost reports."
+    },
+    {
+      "id": 1299,
+      "question": "A genomics research company is designing a scalable architecture for a loosely coupled workload. Tasks in the workload are independent and can be processed in parallel. The architecture needs to minimize management overhead and provide automatic scaling based on demand. Which solution will meet these requirements MOST cost-effectively?",
+      "options": {
+        "A": "Use a cluster of Amazon EC2 instances. Use AWS Systems Manager to manage the workload.",
+        "B": "Implement a serverless architecture that uses AWS Lambda functions.",
+        "C": "Use AWS ParallelCluster to deploy a dedicated high-performance cluster.",
+        "D": "Implement vertical scaling for each workload task."
+      },
+      "correct": ["B"],
+      "explanation": "AWS Lambda is ideal for loosely coupled, independent, parallelizable tasks. It automatically scales with demand, requires zero infrastructure management, and charges only for execution time — making it the most cost-effective and low-overhead solution."
+    },
+    {
+      "id": 1300,
+      "question": "A machine learning (ML) team is building an application that uses data that is in an Amazon S3 bucket. The ML team needs a storage solution for its model training workflow on AWS. The ML team requires high-performance storage that supports frequent access to training datasets. The storage solution must integrate natively with Amazon S3. Which solution will meet these requirements with the LEAST operational overhead?",
+      "options": {
+        "A": "Use Amazon Elastic Block Store (Amazon EBS) volumes to provide high-performance storage. Use AWS DataSync to migrate data from the S3 bucket to EBS volumes.",
+        "B": "Store training data on Amazon EBS volumes. Use the S3 Copy API to copy data from the S3 bucket to EBS volumes.",
+        "C": "Use Amazon FSx for Lustre to provide high-performance storage. Store training datasets in Amazon S3 Standard storage.",
+        "D": "Use Amazon EMR to provide high-performance storage. Store training datasets in Amazon S3 Glacier Instant Retrieval storage."
+      },
+      "correct": ["C"],
+      "explanation": "Amazon FSx for Lustre is a high-performance parallel file system that natively integrates with Amazon S3 — it can automatically import data from and export data to S3. This provides the required high IOPS and seamless S3 integration with minimal operational overhead."
+    },
+    {
+      "id": 1301,
+      "question": "A company stores data in an on-premises MySQL database. The company wants to replicate the data to AWS for analytics. The company wants to use Amazon Athena to query the data. The company needs a solution that minimizes cost. Which solution will meet these requirements?",
+      "options": {
+        "A": "Use AWS Database Migration Service (AWS DMS) to migrate the data to Amazon RDS for MySQL. Use Amazon RDS snapshots to export data to Amazon S3. Use Athena to query the data.",
+        "B": "Use AWS DataSync to replicate the data to an Amazon S3 bucket. Use AWS Glue to catalog the data. Use Athena to query the data.",
+        "C": "Use AWS DataSync to replicate the data to Amazon RDS. Use Amazon RDS to export data to Amazon S3. Use Athena to query the data.",
+        "D": "Use AWS Database Migration Service (AWS DMS) to migrate the data to Amazon DynamoDB. Use DynamoDB Streams to export data to Amazon S3. Use Athena to query the data."
+      },
+      "correct": ["B"],
+      "explanation": "Using AWS DataSync to replicate data directly to S3 is cost-effective, and AWS Glue can catalog the data so Athena can query it. This avoids running RDS instances, reducing costs while still enabling analytics with Athena."
+    },
+    {
+      "id": 1302,
+      "question": "A company stores files in Amazon S3. The company uses pre-signed URLs to access specific files. A solutions architect must design a solution so that only authorized users can access the files by using a pre-signed URL. The solution must also deny requests for unauthorized users. Which solution will meet these requirements with the LEAST operational overhead?",
+      "options": {
+        "A": "Attach an Amazon CloudFront distribution to the S3 bucket. Implement Lambda@Edge to validate JWT tokens on each request to CloudFront.",
+        "B": "Create an AWS Lambda function that generates a pre-signed URL. Use Amazon Cognito user pools to authenticate users. Configure the Lambda function to generate the pre-signed URL only for authenticated users.",
+        "C": "Set up an Amazon API Gateway REST API that generates the pre-signed URL. Add a resource policy to the API Gateway API to deny unauthorized access.",
+        "D": "Enable S3 Block Public Access on the S3 bucket. Create an S3 bucket policy to deny anonymous access. Generate pre-signed URLs using AWS KMS keys."
+      },
+      "correct": ["B"],
+      "explanation": "Using Amazon Cognito for authentication and a Lambda function that conditionally generates pre-signed URLs only for authenticated users is the most straightforward and operationally efficient approach, requiring minimal custom code and infrastructure."
+    },
+    {
+      "id": 1303,
+      "question": "A company is creating a new application. The application stores text data in an Amazon DynamoDB table. The company wants to build a search feature so that users can search for specific words in the text. Which solution will meet these requirements?",
+      "options": {
+        "A": "Use DynamoDB Streams to send the text data to Amazon Kinesis Data Streams. Use Amazon Kinesis Data Firehose to write the data to Amazon OpenSearch Service. Use OpenSearch Service to perform full-text search.",
+        "B": "Use DynamoDB Streams to send the text data to Amazon Kinesis Data Streams. Use Amazon Kinesis Data Firehose to write the data to Amazon OpenSearch Service.",
+        "C": "Enable DynamoDB Streams. Use an AWS Lambda function to send the text data to Amazon OpenSearch Service. Use OpenSearch Service to perform full-text search.",
+        "D": "Enable DynamoDB Streams. Use an AWS Lambda function to send the text data to Amazon Redshift. Use Amazon Redshift to perform full-text search."
+      },
+      "correct": ["C"],
+      "explanation": "DynamoDB Streams captures changes to items and Lambda can process those stream records to index the text data into Amazon OpenSearch Service, which natively supports full-text search. This is the most operationally efficient pattern for this use case."
+    },
+    {
+      "id": 1304,
+      "question": "A company needs to design a solution to track user activity on the company's website. The website uses Amazon CloudFront to deliver content. The solution must store the data in a relational database and must include all the data that CloudFront captures in its standard logs. Which solution will meet these requirements with the LEAST operational overhead?",
+      "options": {
+        "A": "Activate CloudFront standard logs. Store the logs in an Amazon S3 bucket. Configure S3 Event Notifications to invoke an AWS Lambda function that inserts data into an Amazon RDS DB instance.",
+        "B": "Activate CloudFront standard logs. Store the logs in an Amazon S3 bucket. Configure AWS Glue to crawl the logs. Configure Amazon Redshift to run SQL queries on the logs.",
+        "C": "Configure CloudFront to send web request data to Amazon Kinesis Data Streams. Configure Amazon Data Firehose to deliver the data to Amazon RDS.",
+        "D": "Activate CloudFront standard logs. Store the logs in an Amazon S3 bucket. Configure Amazon Athena to query the logs."
+      },
+      "correct": ["A"],
+      "explanation": "Activating CloudFront standard logs, storing them in S3, and using S3 event notifications with Lambda to parse and insert records into an RDS relational database satisfies the requirement to store data in a relational database with the least operational overhead compared to setting up Kinesis and Firehose pipelines."
+    },
+    {
+      "id": 1305,
+      "question": "A company runs a critical application on a fleet of Amazon EC2 instances that are in multiple Availability Zones (AZs). The company recently experienced a service disruption that was caused by a configuration change in the application. The company wants a solution that records application changes and automatically rolls back any changes that cause a disruption. Which solution will meet these requirements?",
+      "options": {
+        "A": "Use AWS CloudTrail to record all changes. Create an AWS Lambda function that monitors CloudTrail events. Configure the Lambda function to roll back the changes automatically.",
+        "B": "Use AWS AppConfig to manage the application configuration. Enable the deployment strategy that monitors AWS CloudWatch alarms. Configure AppConfig to roll back the configuration when an alarm is triggered.",
+        "C": "Use AWS Config to record the configuration changes. Create a custom AWS Config rule to monitor changes. Configure the rule to invoke an AWS Lambda function that rolls back the changes.",
+        "D": "Use AWS Systems Manager Parameter Store to manage the application configuration. Use AWS CloudTrail to monitor changes. Configure a Lambda function to trigger on CloudTrail events and roll back the changes."
+      },
+      "correct": ["B"],
+      "explanation": "AWS AppConfig is specifically designed for managing application configurations with built-in deployment strategies that include automatic rollback when CloudWatch alarms detect issues. This is the most direct and operationally efficient solution for this use case."
+    },
+    {
+      "id": 1306,
+      "question": "A company runs an application that uses Amazon RDS for MySQL. The company needs to implement a disaster recovery (DR) solution with an RPO of 1 hour and an RTO of 30 minutes. Which solution will meet these requirements?",
+      "options": {
+        "A": "Create a read replica in a different AWS Region. Promote the read replica to a standalone DB instance in the event of a failure.",
+        "B": "Enable automated backups with a retention period of 1 day. Restore from a backup in the event of a failure.",
+        "C": "Use AWS Database Migration Service (AWS DMS) to replicate data to a different AWS Region. Fail over to the replicated instance in the event of a failure.",
+        "D": "Create a Multi-AZ deployment in a different AWS Region. Fail over to the standby instance in the event of a failure."
+      },
+      "correct": ["A"],
+      "explanation": "A cross-region RDS read replica supports an RPO of approximately the replication lag (well under 1 hour in most cases). Promoting the read replica to a standalone DB instance can be completed within 30 minutes, satisfying the RTO requirement."
+    },
+    {
+      "id": 1307,
+      "question": "A company uses Apache Hadoop and Apache Spark on-premises to process large datasets. The on-premises infrastructure has become complex and is difficult to scale. The company wants a solution that reduces operational complexity while keeping data processing close to on-premises data sources. Which solution will meet these requirements?",
+      "options": {
+        "A": "Use AWS DataSync to connect to on-prem HDFS. Use Amazon EMR to process the data.",
+        "B": "Use Site-to-Site VPN to access on-prem HDFS. Use Amazon EMR to process the data.",
+        "C": "Migrate to Amazon EMR on AWS Outposts.",
+        "D": "Use AWS Snowball to migrate data to S3. Use EMR to process."
+      },
+      "correct": ["C"],
+      "explanation": "Amazon EMR on AWS Outposts brings AWS-managed EMR infrastructure on-premises, reducing operational complexity while keeping processing physically close to on-premises data sources, satisfying both requirements."
+    },
+    {
+      "id": 1308,
+      "question": "A company runs a containerized application on Amazon Elastic Kubernetes Service (Amazon EKS). The company wants to use Amazon SQS to decouple the application components. The application sends messages to an Amazon SQS queue. A Kubernetes deployment must scale based on the SQS queue depth. Which solution will meet these requirements with the LEAST operational overhead?",
+      "options": {
+        "A": "Configure a Kubernetes Horizontal Pod Autoscaler (HPA) to scale based on Amazon CloudWatch metrics for SQS queue depth.",
+        "B": "Use the AWS Node Termination Handler to scale based on SQS queue depth.",
+        "C": "Deploy the Kubernetes Event Driven Autoscaler (KEDA) with an SQS scaler to scale the Kubernetes deployment based on queue depth.",
+        "D": "Create an AWS Lambda function to scale the Kubernetes deployment. Configure the Lambda function to trigger when the SQS queue depth increases."
+      },
+      "correct": ["C"],
+      "explanation": "KEDA (Kubernetes Event-Driven Autoscaling) provides a native Kubernetes integration with SQS as a scaler trigger, automatically scaling pods based on queue depth with minimal configuration and no custom Lambda or CloudWatch alarm setup required."
+    },
+    {
+      "id": 1309,
+      "question": "A healthcare company uses an Amazon EMR cluster to process patient data. The data must be encrypted in transit and at rest. Local volumes in the cluster also need to be encrypted. Which solution will meet these requirements?",
+      "options": {
+        "A": "Create Amazon EBS volumes with encryption enabled. Attach the volumes to the existing EMR cluster.",
+        "B": "Create an EMR security configuration that encrypts the data in transit, data at rest, and local volumes. Associate the security configuration with the EMR cluster.",
+        "C": "Create a runtime role that has a trust policy for the EMR cluster to access encrypted resources.",
+        "D": "Deploy the application on an EC2 instance that supports encryption and attach encrypted EBS volumes."
+      },
+      "correct": ["B"],
+      "explanation": "EMR security configurations provide a centralized way to enforce in-transit encryption, at-rest encryption, and local disk encryption for the entire cluster. This is the designed AWS mechanism for satisfying comprehensive encryption requirements in EMR."
+    },
+    {
+      "id": 1310,
+      "question": "A company runs a three-tier application on AWS. The web tier consists of Amazon EC2 instances behind an Application Load Balancer. The application tier has EC2 instances that process requests. The database tier uses Amazon Aurora. The company wants to implement a caching solution to reduce load on the Aurora database. The caching solution must be highly available. Which solution will meet these requirements?",
+      "options": {
+        "A": "Deploy Amazon ElastiCache for Redis in cluster mode across multiple Availability Zones.",
+        "B": "Deploy Amazon ElastiCache for Memcached in a single Availability Zone.",
+        "C": "Deploy Amazon DynamoDB Accelerator (DAX) as a caching layer for Aurora.",
+        "D": "Add read replicas to the Aurora cluster to distribute read traffic."
+      },
+      "correct": ["A"],
+      "explanation": "Amazon ElastiCache for Redis in cluster mode with Multi-AZ provides a highly available in-memory caching layer that can significantly reduce read load on Aurora. Redis cluster mode offers replication and automatic failover across AZs."
+    },
+    {
+      "id": 1311,
+      "question": "A company needs to collect and analyze data from IoT sensors across thousands of devices. The data arrives in real time and must be processed and stored for future analysis. The company wants to minimize infrastructure management. Which solution will meet these requirements?",
+      "options": {
+        "A": "Use AWS IoT Core to receive data. Use Amazon Kinesis Data Streams to process the data in real time. Store the processed data in Amazon S3.",
+        "B": "Use AWS IoT Core to receive data. Use Amazon Kinesis Data Firehose to deliver the data to Amazon S3 for future analysis.",
+        "C": "Use Amazon EC2 instances to receive IoT data. Use Amazon Kinesis Data Firehose to store the data in Amazon S3.",
+        "D": "Use AWS IoT Core to receive data. Store the data directly in Amazon DynamoDB for future analysis."
+      },
+      "correct": ["B"],
+      "explanation": "AWS IoT Core is purpose-built for receiving IoT device data at scale. Amazon Kinesis Data Firehose is a fully managed service that can deliver streaming data to S3 without any infrastructure to manage, minimizing operational overhead while enabling future analysis."
+    },
+    {
+      "id": 1312,
+      "question": "A company is running a workload on Amazon EC2 On-Demand Instances. The workload runs continuously for 1 year, and the company anticipates using the same capacity for the next 3 years. A solutions architect needs to recommend a purchasing option that maximizes cost savings without requiring upfront payment. Which solution will meet these requirements?",
+      "options": {
+        "A": "Purchase EC2 Reserved Instances with no upfront payment for a 1-year term.",
+        "B": "Purchase EC2 Reserved Instances with no upfront payment for a 3-year term.",
+        "C": "Purchase an EC2 Savings Plan with no upfront payment for a 1-year term.",
+        "D": "Purchase an EC2 Savings Plan with no upfront payment for a 3-year term."
+      },
+      "correct": ["D"],
+      "explanation": "EC2 Savings Plans with a 3-year no upfront commitment provide the maximum savings (up to 66%) compared to On-Demand pricing, and are more flexible than Reserved Instances. The 3-year term aligns with the company's 3-year usage anticipation."
+    },
+    {
+      "id": 1313,
+      "question": "A company needs to store confidential files on AWS. The company requires that the files be encrypted at rest, that encryption keys be managed by the company, and that access to the files be restricted to specific IAM users. Which combination of solutions will meet these requirements? (Choose two.)",
+      "options": {
+        "A": "Store the confidential files in Amazon S3.",
+        "B": "Store the confidential files in Amazon S3 Glacier Deep Archive.",
+        "C": "Use server-side encryption with customer-provided keys (SSE-C) to encrypt the data at rest.",
+        "D": "Use server-side encryption with Amazon S3 managed keys (SSE-S3) to encrypt the data at rest.",
+        "E": "Use server-side encryption with AWS KMS managed keys (SSE-KMS) to encrypt the data at rest."
+      },
+      "correct": ["A", "E"],
+      "explanation": "Storing files in Amazon S3 with SSE-KMS allows the company to manage its own KMS keys (using customer-managed CMKs) and control access at the key policy and S3 bucket policy level. SSE-KMS provides key management control and auditability through AWS KMS."
+    },
+    {
+      "id": 1314,
+      "question": "A company has a fleet of Amazon EC2 instances that run in multiple AWS Regions. The company uses AWS Systems Manager to manage the EC2 instances. The company wants to query inventory data from all Regions in a single pane of glass. Which solution will meet these requirements?",
+      "options": {
+        "A": "Use Systems Manager Inventory to collect data. Use Amazon Athena to query the data.",
+        "B": "Use Systems Manager Inventory to collect data. Set up a resource data sync for all Regions. Use Amazon Athena to query the data from the aggregated S3 bucket.",
+        "C": "Use Amazon CloudWatch agent to collect data. Use Amazon CloudWatch Logs Insights to query the data.",
+        "D": "Use AWS Config to record inventory data. Use AWS Config aggregators across Regions to query the data."
+      },
+      "correct": ["B"],
+      "explanation": "Systems Manager Inventory combined with Resource Data Sync aggregates inventory data from all Regions into a single S3 bucket. Amazon Athena can then query that S3 bucket to provide a centralized, single-pane-of-glass view of inventory across all Regions."
+    },
+    {
+      "id": 1315,
+      "question": "A company wants to migrate its on-premises Oracle database to Amazon Aurora PostgreSQL. The company requires minimal downtime during migration. Which solution will meet these requirements?",
+      "options": {
+        "A": "Use AWS Database Migration Service (AWS DMS) with full load and ongoing replication to migrate the database.",
+        "B": "Export the Oracle database to a flat file. Import the flat file into Aurora PostgreSQL.",
+        "C": "Use AWS Snowball to export the Oracle database. Import the data into Aurora PostgreSQL.",
+        "D": "Create an Oracle read replica on AWS. Switch traffic to Aurora PostgreSQL after the replica is in sync."
+      },
+      "correct": ["A"],
+      "explanation": "AWS DMS supports full load combined with Change Data Capture (CDC) for ongoing replication, enabling continuous synchronization with the source Oracle database while the target Aurora PostgreSQL catches up, resulting in minimal downtime during cutover."
+    },
+    {
+      "id": 1316,
+      "question": "A company runs a containerized batch processing workload on Amazon ECS. The workload processes large amounts of data and runs multiple times a day. The company wants to minimize the cost of running the workload. Which solution will meet these requirements?",
+      "options": {
+        "A": "Run the ECS tasks on AWS Fargate Spot.",
+        "B": "Run the ECS tasks on Amazon EC2 On-Demand Instances.",
+        "C": "Run the ECS tasks on AWS Fargate with Savings Plans.",
+        "D": "Run the ECS tasks on Amazon EC2 Reserved Instances."
+      },
+      "correct": ["A"],
+      "explanation": "AWS Fargate Spot provides up to 70% discount compared to standard Fargate pricing. For batch workloads that can tolerate interruption, Fargate Spot is the most cost-effective option since batch jobs can be retried if interrupted."
+    },
+    {
+      "id": 1317,
+      "question": "A company runs a three-tier web application in a VPC on AWS. The company deployed an Application Load Balancer (ALB) in a public subnet. The web tier and application tier Amazon EC2 instances are deployed in a private subnet. The company uses a self-managed MySQL database that runs on EC2 instances in an isolated private subnet for the database tier. The company wants a mechanism that will give a DevOps team the ability to use SSH to access all the servers. The company also wants to have a centrally managed log of all connections made to the servers. Which combination of solutions will meet these requirements with the MOST operational efficiency? (Choose two.)",
+      "options": {
+        "A": "Create a bastion host in the public subnet. Configure security groups in the public, private, and isolated subnets to allow SSH access.",
+        "B": "Create an interface VPC endpoint for AWS Systems Manager Session Manager. Attach the endpoint to the VPC.",
+        "C": "Create an IAM policy that grants access to AWS Systems Manager Session Manager. Attach the IAM policy to the EC2 instances.",
+        "D": "Create a gateway VPC endpoint for AWS Systems Manager Session Manager. Attach the endpoint to the VPC.",
+        "E": "Attach an AmazonSSMManagedInstanceCore AWS managed IAM policy to all the EC2 instance roles."
+      },
+      "correct": ["B", "E"],
+      "explanation": "AWS Systems Manager Session Manager eliminates the need for a bastion host and SSH keys. Creating an interface VPC endpoint allows SSM to reach instances in private subnets without internet access, and attaching AmazonSSMManagedInstanceCore to instance roles enables SSM management. Session Manager also provides a centralized, auditable log of all sessions."
+    },
+    {
+      "id": 1318,
+      "question": "A company runs an ecommerce application on AWS. The application stores data in Amazon RDS for MySQL. The company wants to analyze historical data that is older than 1 year. The company needs a cost-effective solution to store and query the historical data. Which solution will meet these requirements?",
+      "options": {
+        "A": "Use AWS Database Migration Service (AWS DMS) to export the historical data to Amazon S3. Use Amazon Athena to query the historical data.",
+        "B": "Create a read replica of the RDS database. Use the read replica to query historical data.",
+        "C": "Use Amazon RDS snapshots to restore historical data to a new RDS instance for analysis.",
+        "D": "Move the historical data to Amazon DynamoDB. Use DynamoDB queries to analyze the historical data."
+      },
+      "correct": ["A"],
+      "explanation": "Exporting historical data from RDS to S3 via DMS and then querying with Amazon Athena (serverless, pay-per-query) is significantly more cost-effective than maintaining a running RDS instance for occasional historical analysis."
+    },
+    {
+      "id": 1319,
+      "question": "A company hosts its application in AWS. The application uses an Amazon API Gateway REST API backed by AWS Lambda. The company wants to protect the API from common web exploits such as SQL injection and cross-site scripting. Which solution will meet these requirements with the LEAST operational overhead?",
+      "options": {
+        "A": "Enable AWS WAF and associate it with the API Gateway stage. Configure AWS managed rule groups for common threats.",
+        "B": "Deploy an Application Load Balancer in front of API Gateway. Configure security groups to block malicious traffic.",
+        "C": "Use AWS Shield Advanced to protect the API from common web exploits.",
+        "D": "Enable Amazon GuardDuty to monitor for and block common web exploits."
+      },
+      "correct": ["A"],
+      "explanation": "AWS WAF can be directly associated with an API Gateway stage and AWS provides managed rule groups (e.g., AWSManagedRulesCommonRuleSet) that automatically protect against SQL injection, XSS, and other OWASP Top 10 exploits with minimal configuration and operational overhead."
+    },
+    {
+      "id": 1320,
+      "question": "A company has a stateful web application that runs on Amazon EC2 instances behind an Application Load Balancer (ALB). The application stores session state in memory on the EC2 instances. When the ALB routes requests to different EC2 instances, users lose their session state. Which solution will meet this requirement with the LEAST operational overhead?",
+      "options": {
+        "A": "Enable sticky sessions on the ALB target group.",
+        "B": "Store the session state in Amazon ElastiCache for Redis. Update the application to retrieve session state from ElastiCache.",
+        "C": "Store the session state in Amazon DynamoDB. Update the application to retrieve session state from DynamoDB.",
+        "D": "Deploy the application on a single EC2 instance and eliminate the ALB."
+      },
+      "correct": ["B"],
+      "explanation": "Externalizing session state to ElastiCache for Redis is the best practice for stateful web applications with multiple EC2 instances. It ensures session persistence across all instances, allows any instance to serve any request, and provides high availability with minimal operational overhead."
+    },
+    {
+      "id": 1321,
+      "question": "A company runs an application on an Amazon EC2 instance. The EC2 instance needs to access an Amazon S3 bucket. The company wants the most secure way to grant the EC2 instance access to the S3 bucket. Which solution will meet these requirements?",
+      "options": {
+        "A": "Create an IAM user. Attach an IAM policy that grants access to the S3 bucket to the IAM user. Store the IAM user's access keys on the EC2 instance.",
+        "B": "Create an IAM role with a policy that grants access to the S3 bucket. Attach the IAM role to the EC2 instance.",
+        "C": "Create an IAM user. Attach an IAM policy that grants access to the S3 bucket to the IAM user. Use the IAM user's credentials in the application code.",
+        "D": "Use the EC2 instance's root credentials to access the S3 bucket."
+      },
+      "correct": ["B"],
+      "explanation": "Attaching an IAM role directly to the EC2 instance is the most secure approach as it uses temporary, automatically rotated credentials via the instance metadata service. This avoids long-lived static access keys, which pose a security risk if compromised."
+    },
+    {
+      "id": 1322,
+      "question": "A company wants to implement a data lake on AWS for analytics. The company stores raw data in Amazon S3. The company wants to transform and catalog the data to make it available for business intelligence tools. The solution must require minimal code. Which solution will meet these requirements with the LEAST operational overhead?",
+      "options": {
+        "A": "Use AWS Glue crawlers to catalog the data. Use AWS Glue ETL jobs to transform the data. Use Amazon Athena to query the data.",
+        "B": "Use Amazon EMR to catalog and transform the data. Use Amazon Athena to query the data.",
+        "C": "Use AWS Lambda to transform the data. Use AWS Glue crawlers to catalog the data. Use Amazon Athena to query the data.",
+        "D": "Use Amazon Redshift Spectrum to catalog and transform the data."
+      },
+      "correct": ["A"],
+      "explanation": "AWS Glue provides a fully managed, serverless ETL service with visual job authoring (minimal code), automatic schema discovery via crawlers, and integrates natively with Athena for querying. This stack is purpose-built for data lake analytics with the least operational overhead."
+    },
+    {
+      "id": 1323,
+      "question": "A company needs to provide temporary access to an S3 bucket for third-party contractors who do not have AWS accounts. The company wants to limit access to a specific folder in the S3 bucket and allow access for 24 hours only. Which solution will meet these requirements?",
+      "options": {
+        "A": "Create an IAM user for each contractor. Attach an IAM policy that grants access to the specific folder. Delete the IAM users after 24 hours.",
+        "B": "Use S3 pre-signed URLs to generate temporary URLs for the specific folder. Set the expiration time to 24 hours.",
+        "C": "Enable public access to the specific folder in the S3 bucket for 24 hours.",
+        "D": "Create an Amazon CloudFront distribution with a signed URL for the specific folder. Set the expiration time to 24 hours."
+      },
+      "correct": ["B"],
+      "explanation": "S3 pre-signed URLs are specifically designed to grant temporary access to S3 objects without requiring AWS credentials. Setting the expiration to 24 hours satisfies the time-bound requirement, and the URL can be scoped to a specific prefix/folder."
+    },
+    {
+      "id": 1324,
+      "question": "A company is building a real-time analytics platform. The platform receives streaming data from multiple sources. The company wants to process the data in real time and store the results for future queries. The solution should be serverless and scalable. Which solution will meet these requirements?",
+      "options": {
+        "A": "Use Amazon Kinesis Data Streams to ingest the data. Use AWS Lambda to process the data. Store the results in Amazon DynamoDB.",
+        "B": "Use Amazon MSK (Managed Streaming for Apache Kafka) to ingest the data. Use Amazon EC2 instances to process the data. Store the results in Amazon RDS.",
+        "C": "Use Amazon SQS to ingest the data. Use Amazon EC2 instances to process the data. Store the results in Amazon S3.",
+        "D": "Use Amazon Kinesis Data Firehose to ingest the data. Use Amazon EMR to process the data. Store the results in Amazon Redshift."
+      },
+      "correct": ["A"],
+      "explanation": "Amazon Kinesis Data Streams combined with AWS Lambda provides a fully serverless, auto-scaling stream processing architecture. Lambda triggers on Kinesis shard records and DynamoDB provides a fast, serverless NoSQL store for the results."
+    },
+    {
+      "id": 1325,
+      "question": "A company runs a web application on Amazon EC2 instances in an Auto Scaling group. The application experiences high traffic on weekdays from 9 AM to 5 PM and low traffic on evenings and weekends. The company wants to optimize costs while ensuring the application can handle peak demand. Which solution will meet these requirements?",
+      "options": {
+        "A": "Configure a scheduled scaling action to scale out during weekday business hours and scale in during evenings and weekends.",
+        "B": "Configure a target tracking scaling policy based on CPU utilization.",
+        "C": "Use EC2 Spot Instances for the Auto Scaling group to reduce costs.",
+        "D": "Configure a step scaling policy to handle traffic changes."
+      },
+      "correct": ["A"],
+      "explanation": "Scheduled scaling is the optimal solution when traffic patterns are predictable and follow a known schedule (weekdays 9-5). It proactively scales out before the peak period begins rather than reacting to traffic, ensuring capacity is available while scaling in during off-hours to reduce costs."
+    },
+    {
+      "id": 1326,
+      "question": "A company stores critical data in Amazon S3. The company requires that access to the S3 bucket be restricted to requests that come from a specific AWS account only. Which solution will meet this requirement?",
+      "options": {
+        "A": "Configure an S3 bucket policy that uses the aws:PrincipalAccount condition to allow access only from the specific AWS account.",
+        "B": "Enable S3 Block Public Access. Configure an ACL that allows access only from the specific AWS account.",
+        "C": "Configure an S3 bucket policy that allows access only to IAM users in the specific AWS account.",
+        "D": "Use AWS Resource Access Manager (AWS RAM) to share the S3 bucket with the specific AWS account."
+      },
+      "correct": ["A"],
+      "explanation": "An S3 bucket policy using the aws:PrincipalAccount condition key allows restricting all access to requests originating from a specific AWS account number, regardless of the IAM entity making the request. This is the most precise and correct approach."
+    },
+    {
+      "id": 1327,
+      "question": "A company runs a multi-tier application on AWS. The application uses Amazon EC2 instances for the web and application tiers. The database tier uses Amazon Aurora. The company wants to ensure that the database password is automatically rotated and that the application retrieves the latest password without manual updates. Which solution will meet these requirements with the LEAST operational overhead?",
+      "options": {
+        "A": "Store the database password in AWS Secrets Manager. Enable automatic rotation. Update the application to retrieve the password from Secrets Manager.",
+        "B": "Store the database password in AWS Systems Manager Parameter Store. Create a Lambda function to rotate the password. Update the application to retrieve the password from Parameter Store.",
+        "C": "Store the database password in an environment variable on the EC2 instances. Create a script to rotate the password periodically.",
+        "D": "Hard-code the database password in the application configuration files. Rotate the password manually every 90 days."
+      },
+      "correct": ["A"],
+      "explanation": "AWS Secrets Manager provides native, automatic rotation for RDS/Aurora passwords including built-in Lambda rotation functions. The application simply calls the Secrets Manager API to get the current password — no manual updates are needed when rotation occurs."
+    },
+    {
+      "id": 1328,
+      "question": "A company is migrating a large amount of data from on-premises tape storage to AWS. The company needs to transfer data offline due to limited network bandwidth. The data will be stored in Amazon S3 for long-term archival. Which solution will meet these requirements?",
+      "options": {
+        "A": "Use AWS Direct Connect to transfer the data to Amazon S3.",
+        "B": "Use AWS Snowball Edge Storage Optimized devices to transfer the data offline to S3.",
+        "C": "Use AWS DataSync to transfer the data over the internet to Amazon S3.",
+        "D": "Use Amazon Kinesis Data Firehose to stream the tape data to Amazon S3."
+      },
+      "correct": ["B"],
+      "explanation": "AWS Snowball Edge Storage Optimized is purpose-built for offline, large-scale data migration when network bandwidth is limited. The physical device is shipped to the customer, data is loaded locally, and then shipped back to AWS for ingestion into S3."
+    },
+    {
+      "id": 1329,
+      "question": "A company runs workloads that require high-performance computing (HPC). The workloads use MPI for inter-node communication and require extremely low latency between nodes. Which Amazon EC2 network feature will meet these requirements?",
+      "options": {
+        "A": "Enhanced Networking with Elastic Fabric Adapter (EFA).",
+        "B": "Enhanced Networking with Intel 82599 Virtual Function (VF) interface.",
+        "C": "Placement groups with spread strategy.",
+        "D": "Amazon EC2 network interfaces with Jumbo Frames enabled."
+      },
+      "correct": ["A"],
+      "explanation": "Elastic Fabric Adapter (EFA) is a network interface specifically designed for HPC workloads that require OS-bypass networking for extremely low latency and high throughput inter-node communication, making it ideal for MPI-based workloads."
+    },
+    {
+      "id": 1330,
+      "question": "A company is designing an architecture for a highly available web application on AWS. The architecture must handle millions of requests per second and route traffic across multiple AWS Regions. Which combination of AWS services should the solutions architect use to meet these requirements?",
+      "options": {
+        "A": "Amazon Route 53 with latency-based routing and Application Load Balancers in each Region.",
+        "B": "Amazon Route 53 with simple routing and Network Load Balancers in each Region.",
+        "C": "AWS Global Accelerator with Application Load Balancers in each Region.",
+        "D": "Amazon CloudFront with Application Load Balancers as the origin in each Region."
+      },
+      "correct": ["C"],
+      "explanation": "AWS Global Accelerator uses the AWS global network to route traffic from users to the nearest healthy endpoint across multiple Regions. Combined with ALBs in each Region, it provides highly available, low-latency global traffic routing with automatic failover — handling millions of requests per second."
+    }
+  ]
+}
