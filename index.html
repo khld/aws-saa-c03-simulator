@@ -283,12 +283,12 @@
 
 <script>
 // ── Question sets config ──────────────────────────────────────────────────────
-// Each entry maps to a versioned JSON file: SAA-C03_MM-YYYY.json
-// Add new versions here as they become available.
+// Each entry maps to a versioned JSON file.
+// Remove comingSoon: true once the JSON file is uploaded to the repo.
 const QUESTION_SETS = [
-  { id: '02-2026',  label: '02-2026',  sub: 'Feb 2026 · 21 Q',    file: 'questions-02-2026.json' },
-  { id: '03-2025',  label: '03-2025',  sub: 'Mar 2025 · Q1191+',  file: 'questions-03-2025.json', comingSoon: true },
-  { id: '05-2025',  label: '05-2025',  sub: 'May 2025 · Q1294+',  file: 'questions-05-2025.json', comingSoon: true }
+  { id: '02-2026',  label: '02-2026',  sub: 'Feb 2026 · 21 Q',   file: 'questions-02-2026.json' },
+  { id: '03-2025',  label: '03-2025',  sub: 'Mar 2025 · 32 Q',   file: 'questions-03-2025.json' },
+  { id: '05-2025',  label: '05-2025',  sub: 'May 2025 · Q1294+', file: 'questions-05-2025.json', comingSoon: true }
 ];
 
 let ALL_QUESTIONS = [];
@@ -340,7 +340,9 @@ async function loadQuestions() {
   try {
     const resp = await fetch(setConfig.file);
     if (!resp.ok) throw new Error(`HTTP ${resp.status} — ${setConfig.file} not found`);
-    ALL_QUESTIONS = await resp.json();
+    const data = await resp.json();
+    // Support both flat array and { questions: [...] } formats
+    ALL_QUESTIONS = Array.isArray(data) ? data : (data.questions || data);
     document.getElementById('loading-screen').style.display = 'none';
     document.getElementById('app').style.display = 'block';
     renderHomeStats();
@@ -410,7 +412,7 @@ function renderQuestion() {
   meta.innerHTML =
     `<span class="badge badge-blue">Q${q.id}</span>` +
     (q.source ? `<span class="badge badge-green">${q.source}</span>` : '') +
-    (q.multi   ? '<span class="badge badge-purple">Multiple Answer</span>' : '');
+    (q.multi || q.multiple ? '<span class="badge badge-purple">Multiple Answer</span>' : '');
 
   document.getElementById('question-text').textContent = q.question;
 
@@ -419,7 +421,12 @@ function renderQuestion() {
   const saved = answers[current] || [];
   const revealed = mode === 'practice' && saved.length > 0;
 
-  q.options.forEach(opt => {
+  // Support both array and object option formats
+  const opts = Array.isArray(q.options)
+    ? q.options
+    : Object.entries(q.options).map(([key, text]) => ({ key, text }));
+
+  opts.forEach(opt => {
     const btn = document.createElement('button');
     btn.className = 'option-btn';
     btn.dataset.key = opt.key;
@@ -459,26 +466,20 @@ function renderQuestion() {
 function toggleOption(key) {
   const q = questions[current];
   let sel = answers[current] ? [...answers[current]] : [];
-  if (q.multi) {
+  const isMulti = q.multi || q.multiple;
+  if (isMulti) {
     sel.includes(key) ? sel.splice(sel.indexOf(key), 1) : sel.push(key);
   } else {
-    sel = [key];
+    sel = sel.includes(key) ? [] : [key];
   }
   answers[current] = sel;
-
-  document.querySelectorAll('.option-btn').forEach(btn => {
-    btn.classList.toggle('selected', sel.includes(btn.dataset.key));
-  });
-
-  if (!q.multi && mode === 'practice') {
-    revealAnswer();
-  } else if (q.multi) {
-    document.getElementById('btn-submit').style.display = sel.length > 0 ? 'inline-flex' : 'none';
-  }
+  renderQuestion();
 }
 
-function submitAnswer() { revealAnswer(); }
-function revealAnswer()  { renderQuestion(); }
+function submitAnswer() {
+  renderQuestion();
+}
+
 function navigate(dir) {
   current = Math.max(0, Math.min(questions.length - 1, current + dir));
   renderQuestion();
@@ -487,66 +488,52 @@ function navigate(dir) {
 function finishQuiz() {
   clearInterval(timerInterval);
   document.getElementById('timer-badge').style.display = 'none';
-  showResults();
-}
-
-// ── Results ───────────────────────────────────────────────────────────────────
-function showResults() {
-  showScreen('screen-results');
-  let correct = 0, incorrect = 0, skipped = 0;
+  let correct = 0;
   questions.forEach((q, i) => {
-    const sel = answers[i] || [];
-    if (sel.length === 0) { skipped++; return; }
-    const isCorrect = q.correct.length === sel.length && q.correct.every(c => sel.includes(c));
-    isCorrect ? correct++ : incorrect++;
+    const ans = answers[i] || [];
+    const isCorrect = q.correct.length === ans.length && q.correct.every(k => ans.includes(k));
+    if (isCorrect) correct++;
   });
-
   const total = questions.length;
-  const pct   = Math.round((correct / total) * 100);
-  const pass  = pct >= 72;
-
+  const pct = Math.round((correct / total) * 100);
+  const pass = pct >= 72;
   const circle = document.getElementById('score-circle');
   circle.className = 'score-circle ' + (pass ? 'pass' : 'fail');
-  document.getElementById('score-pct').textContent      = pct + '%';
-  document.getElementById('result-title').textContent   = pass ? '\uD83C\uDF89 Congratulations! You Passed!' : '\uD83D\uDCDA Keep Studying!';
-  document.getElementById('result-subtitle').textContent = `${correct}/${total} correct \u2014 Pass threshold: 72%`;
-
+  document.getElementById('score-pct').textContent = pct + '%';
+  document.getElementById('result-title').textContent = pass ? '🎉 You Passed!' : '📚 Keep Practicing';
+  document.getElementById('result-subtitle').textContent = `${correct} out of ${total} correct`;
   document.getElementById('results-grid').innerHTML = `
     <div class="result-stat"><div class="num green">${correct}</div><div class="lbl">Correct</div></div>
-    <div class="result-stat"><div class="num red">${incorrect}</div><div class="lbl">Incorrect</div></div>
-    <div class="result-stat"><div class="num blue">${skipped}</div><div class="lbl">Skipped</div></div>
-    <div class="result-stat"><div class="num blue">${pct}%</div><div class="lbl">Score</div></div>`;
+    <div class="result-stat"><div class="num red">${total - correct}</div><div class="lbl">Incorrect</div></div>
+    <div class="result-stat"><div class="num blue">${total}</div><div class="lbl">Total</div></div>
+    <div class="result-stat"><div class="num ${pass ? 'green' : 'red'}">${pct}%</div><div class="lbl">Score</div></div>`;
+  showScreen('screen-results');
 }
 
 function reviewAnswers() {
   const section = document.getElementById('review-section');
-  section.style.display = section.style.display === 'none' ? 'block' : 'none';
-  if (section.style.display === 'none') return;
-
+  section.style.display = 'block';
   const list = document.getElementById('review-list');
   list.innerHTML = '';
   questions.forEach((q, i) => {
-    const sel = answers[i] || [];
-    const isCorrect = sel.length > 0 && q.correct.length === sel.length && q.correct.every(c => sel.includes(c));
-    const div = document.createElement('div');
-    div.className = 'review-item';
-    div.innerHTML = `
+    const ans = answers[i] || [];
+    const isCorrect = q.correct.length === ans.length && q.correct.every(k => ans.includes(k));
+    const item = document.createElement('div');
+    item.className = 'review-item';
+    item.innerHTML = `
       <div class="review-item-header">
         <span class="badge badge-blue">Q${q.id}</span>
-        <span class="dot ${isCorrect ? 'green' : 'red'}"></span>
+        <div class="dot ${isCorrect ? 'green' : 'red'}"></div>
       </div>
-      <h4>${q.question.substring(0, 100)}\u2026</h4>
-      <p style="font-size:0.8rem;color:var(--text2);margin-top:6px;">
-        Your answer: <strong>${sel.join(', ') || 'None'}</strong> | Correct: <strong>${q.correct.join(', ')}</strong>
-      </p>`;
-    div.onclick = () => { current = i; showScreen('screen-quiz'); renderQuestion(); };
-    list.appendChild(div);
+      <h4>${q.question}</h4>`;
+    item.onclick = () => { current = i; showScreen('screen-quiz'); renderQuestion(); };
+    list.appendChild(item);
   });
 }
 
 function goHome() {
   clearInterval(timerInterval);
-  document.getElementById('timer-badge').style.display = 'none';
+  answers = {}; current = 0;
   showScreen('screen-home');
 }
 
@@ -555,7 +542,6 @@ function showScreen(id) {
   document.getElementById(id).classList.add('active');
 }
 
-// Boot
 boot();
 </script>
 </body>
