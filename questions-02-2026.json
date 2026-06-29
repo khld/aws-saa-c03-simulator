@@ -1,0 +1,297 @@
+[
+  {
+    "id": 1,
+    "question": "A company processes customer records in large batches. Each record must be enriched with data from a customer data API that experiences overload. Records are identified by a unique identifier. The customer data that the API retrieves is updated daily. A solutions architect needs a solution to prevent the customer data API from becoming overloaded. Which solution meets these requirements with the LEAST operational overhead?",
+    "options": [
+      { "key": "A", "text": "Enable API Gateway throttling to reduce the number of requests. Use the REST API in the message processor to enrich the messages." },
+      { "key": "B", "text": "Enable API Gateway caching by using the customer identifier as the cache key. Use the REST API in the message processor to enrich the messages." },
+      { "key": "C", "text": "Create an Amazon API Gateway REST API as a proxy to perform the lookup in DynamoDB. Copy all customer data into an Amazon DynamoDB table." },
+      { "key": "D", "text": "Create an Amazon API Gateway REST API as a proxy to an AWS Lambda function. Configure the Lambda function to call the customer data API. Set a reserved concurrency limit on the Lambda function." }
+    ],
+    "correct": ["B"],
+    "multi": false,
+    "explanation": "Enabling caching on an API Gateway proxy reduces repeated calls to the overloaded customer data API by storing responses keyed by the customer identifier. Since the data updates daily, cached results can be refreshed once per day, minimizing operational overhead while preventing API overload.",
+    "source": "02-2026"
+  },
+  {
+    "id": 2,
+    "question": "A solutions architect needs to design a solution to process incoming work items. The work items need to be processed as soon as the work items arrive. Processing can take up to 30 minutes to finish. Processing involves calling external APIs, passing the work items through several intermediate steps and states, and storing those states for future reference. The solution must scale to meet varying incoming work item rates throughout the day. Which combination of steps meets these requirements with the LEAST operational overhead? (Choose two.)",
+    "options": [
+      { "key": "A", "text": "Invoke an AWS Lambda function for each incoming work item. Configure each Lambda function to handle each work item completely. Store work item states in an Amazon DynamoDB table." },
+      { "key": "B", "text": "Invoke an AWS Step Functions workflow to process incoming work items. Use AWS Lambda functions to handle the business logic. Store work item states in an Amazon DynamoDB table." },
+      { "key": "C", "text": "Set up an Amazon API Gateway REST API to receive work items. Configure the REST API to invoke an AWS Lambda function for each work item. Send the requests to an Amazon SQS queue." },
+      { "key": "D", "text": "Deploy two Amazon EC2 Reserved instances behind an Application Load Balancer to handle incoming requests." },
+      { "key": "E", "text": "Set up an Amazon API Gateway REST API to receive work items. Send the work items to an Amazon Simple Queue Service (Amazon SQS) queue." }
+    ],
+    "correct": ["B", "E"],
+    "multi": true,
+    "explanation": "Using API Gateway with SQS decouples incoming requests from processing, allowing the system to scale automatically. AWS Step Functions can orchestrate long-running workflows and maintain state across multiple steps, minimizing operational overhead.",
+    "source": "02-2026"
+  },
+  {
+    "id": 3,
+    "question": "A data science team requires storage for nightly log processing. The size and number of logs is unknown and will persist for 24 hours only. What is the MOST cost-effective solution?",
+    "options": [
+      { "key": "A", "text": "Amazon S3 Glacier Deep Archive" },
+      { "key": "B", "text": "Amazon S3 Standard" },
+      { "key": "C", "text": "Amazon S3 Intelligent-Tiering" },
+      { "key": "D", "text": "Amazon S3 One Zone-Infrequent Access (S3 One Zone-IA)" }
+    ],
+    "correct": ["B"],
+    "multi": false,
+    "explanation": "Amazon S3 Standard provides highly durable, scalable storage with no retrieval delays. For short-lived data that persists only 24 hours, S3 Standard is the most cost-effective because other storage classes are designed for long-term or infrequently accessed data and would incur unnecessary retrieval or lifecycle costs.",
+    "source": "02-2026"
+  },
+  {
+    "id": 4,
+    "question": "A company wants to allow its DevOps teams to create IAM roles within their own AWS accounts. However, IT security policy mandates that no team-created role can have administrative-level permissions. Which solution will meet these requirements?",
+    "options": [
+      { "key": "A", "text": "Use AWS Organizations. Create an SCP that denies permissions to create or update any IAM role that includes the AdministratorAccess policy. Attach the SCP to the OUs that contain the DevOps teams accounts." },
+      { "key": "B", "text": "Use AWS Organizations. Create an SCP that denies permissions to create an IAM role unless a specific permissions boundary policy with predefined restrictions is attached. Attach the SCP to the OUs that contain the DevOps teams accounts." },
+      { "key": "C", "text": "Create AWS Config rules to alert security when the AdministratorAccess policy is granted to any role. Set up auto remediation to delete the IAM role." },
+      { "key": "D", "text": "Create an IAM policy that denies permissions to create IAM roles exceeding predefined permissions. Attach this policy as a permissions boundary to the users, roles, and groups that teams use to create roles." }
+    ],
+    "correct": ["B"],
+    "multi": false,
+    "explanation": "Using an SCP that enforces a permissions boundary ensures DevOps teams can create IAM roles but cannot grant administrative-level permissions. Attaching the SCP at the organizational unit level provides centralized enforcement with minimal operational overhead.",
+    "source": "02-2026"
+  },
+  {
+    "id": 5,
+    "question": "A company uses on-premises virtual machines (VMs) to run a Kubernetes cluster. The company must operate network connectivity for the cluster on premises. The company wants to simplify overall management for the Kubernetes cluster while maintaining control over the underlying infrastructure. Which solution will meet these requirements?",
+    "options": [
+      { "key": "A", "text": "Deploy an Amazon EKS Anywhere cluster on the existing VMs." },
+      { "key": "B", "text": "Deploy Amazon EKS Hybrid Nodes on the existing VMs." },
+      { "key": "C", "text": "Deploy a self-hosted Kubernetes cluster on Amazon EC2 instances. Run the EC2 instances on AWS Outposts." },
+      { "key": "D", "text": "Deploy a self-hosted Kubernetes cluster on Amazon EC2 instances. Host the EC2 instances in a VPC that does not have internet access." }
+    ],
+    "correct": ["B"],
+    "multi": false,
+    "explanation": "Amazon EKS Hybrid Nodes allows running Kubernetes worker nodes on existing on-premises VMs while AWS manages the EKS control plane in an AWS Region. This simplifies cluster management while keeping control of the underlying on-premises infrastructure and network connectivity.",
+    "source": "02-2026"
+  },
+  {
+    "id": 6,
+    "question": "A solutions architect must design a database solution for a high-traffic ecommerce web application. The database stores customer profiles and shopping cart information. The database must support a peak load of several million requests each second and deliver responses in milliseconds. The operational overhead for managing and scaling the database must be minimized. Which database solution should the solutions architect recommend?",
+    "options": [
+      { "key": "A", "text": "Amazon Aurora" },
+      { "key": "B", "text": "Amazon DynamoDB" },
+      { "key": "C", "text": "Amazon RDS" },
+      { "key": "D", "text": "Amazon Redshift" }
+    ],
+    "correct": ["B"],
+    "multi": false,
+    "explanation": "Amazon DynamoDB is a fully managed NoSQL database that handles millions of requests per second with single-digit millisecond latency. It scales automatically with minimal operational overhead, ideal for high-traffic, low-latency workloads like customer profiles and shopping carts.",
+    "source": "02-2026"
+  },
+  {
+    "id": 7,
+    "question": "A company is hosting its website on Amazon S3 and is using Amazon CloudFront to cache content. An employee accidentally published marketing content to the website before the official release of the product. The company needs to remove the marketing content from the website as quickly as possible. Which solution will meet these requirements?",
+    "options": [
+      { "key": "A", "text": "Deploy the updated version of the website to another S3 bucket. Update the origin for CloudFront." },
+      { "key": "B", "text": "Delete the marketing content in the existing S3 bucket. Invalidate the file path in CloudFront." },
+      { "key": "C", "text": "Delete the marketing content in the existing S3 bucket. Create a new CloudFront cache policy with a low TTL. Associate the new policy with the existing CloudFront distribution." },
+      { "key": "D", "text": "Delete the marketing content in the existing S3 bucket. Update the S3 bucket policy to block requests to the file path." }
+    ],
+    "correct": ["B"],
+    "multi": false,
+    "explanation": "Deleting the content from S3 removes it from the origin. Invalidating the specific file paths in CloudFront immediately removes the cached copies at edge locations, ensuring users no longer see the content.",
+    "source": "02-2026"
+  },
+  {
+    "id": 8,
+    "question": "A company is building a solution to provide customers with an API that accesses financial data. The API backend needs to compute tax data for each request. The company anticipates greater demand during the last 3 months of each year. A solutions architect needs to design a scalable solution that can meet regular and peak demand. Which solution will meet these requirements?",
+    "options": [
+      { "key": "A", "text": "Host the API on an Amazon EC2 instance that runs third-party software. Configure the EC2 instance to perform tax computations." },
+      { "key": "B", "text": "Deploy an Amazon API Gateway REST API. Create an AWS Lambda function to perform tax computations. Integrate the Lambda function with the REST API." },
+      { "key": "C", "text": "Deploy an Amazon API Gateway REST API. Create an Application Load Balancer (ALB) in front of two Amazon EC2 instances. Configure the EC2 instances to perform tax computations." },
+      { "key": "D", "text": "Deploy an Amazon API Gateway REST API. Configure an Amazon EC2 instance to perform tax computations. Integrate the EC2 instance with the REST API." }
+    ],
+    "correct": ["B"],
+    "multi": false,
+    "explanation": "Amazon API Gateway with AWS Lambda scales automatically with demand, handling both regular and seasonal peak workloads. Lambda provides on-demand compute without the need to provision or manage servers.",
+    "source": "02-2026"
+  },
+  {
+    "id": 9,
+    "question": "An ecommerce company is redesigning a product catalog system to handle millions of products and provide fast access to product information. The system needs to store structured product data and unstructured data such as high-resolution product videos and user manuals. The architecture must be highly available and handle sudden traffic spikes during sales events. Which solution will meet this requirement?",
+    "options": [
+      { "key": "A", "text": "Use an Amazon RDS Multi-AZ deployment to store product information. Store product videos and user manuals in Amazon S3." },
+      { "key": "B", "text": "Use Amazon DynamoDB to store product information. Store product videos and user manuals in Amazon S3." },
+      { "key": "C", "text": "Store all product information, including product videos and user manuals, in Amazon DynamoDB." },
+      { "key": "D", "text": "Deploy an Amazon DocumentDB (with MongoDB compatibility) cluster to store all product information, product videos, and user manuals." }
+    ],
+    "correct": ["B"],
+    "multi": false,
+    "explanation": "Amazon DynamoDB provides single-digit millisecond performance at any scale and is fully managed. Amazon S3 is optimized for storing unstructured large objects such as videos and manuals with virtually unlimited scalability and high durability.",
+    "source": "02-2026"
+  },
+  {
+    "id": 10,
+    "question": "A company is developing a content sharing platform that currently handles 500 GB of user-generated media files. The company expects the amount of content to grow significantly. The company needs a storage solution that can automatically scale, provide high durability, and allow direct user uploads from web browsers. Which solution will meet this requirement?",
+    "options": [
+      { "key": "A", "text": "Store the data in an Amazon Elastic Block Store (Amazon EBS) volume with Multi-Attach enabled." },
+      { "key": "B", "text": "Store the data in an Amazon Elastic File System (Amazon EFS) Standard file system." },
+      { "key": "C", "text": "Store the data in an Amazon S3 Standard bucket." },
+      { "key": "D", "text": "Store the data in an Amazon S3 Express One Zone bucket." }
+    ],
+    "correct": ["C"],
+    "multi": false,
+    "explanation": "Amazon S3 Standard provides virtually unlimited scalability, high durability (11 nines), and millisecond latency. S3 supports pre-signed URLs and direct browser uploads, enabling users to upload files securely without routing through backend servers.",
+    "source": "02-2026"
+  },
+  {
+    "id": 11,
+    "question": "A company is designing a website that displays stock market prices to users. The company wants to use Amazon ElastiCache (Redis OSS) for the data caching layer. The company needs to ensure that the website data caching layer can automatically fail over to another node if necessary. Which solution will meet this requirement?",
+    "options": [
+      { "key": "A", "text": "Enable read replicas in ElastiCache (Redis OSS). Promote the read replica when necessary." },
+      { "key": "B", "text": "Enable Multi-AZ in ElastiCache (Redis OSS). Fail over to a second node when necessary." },
+      { "key": "C", "text": "Export a backup of the ElastiCache (Redis OSS) cache to an Amazon S3 bucket. Restore the cache to a second cluster when necessary." },
+      { "key": "D", "text": "Export a backup of the ElastiCache (Redis OSS) cache by using AWS Backup. Restore the cache to a second cluster when necessary." }
+    ],
+    "correct": ["B"],
+    "multi": false,
+    "explanation": "Amazon ElastiCache for Redis supports Multi-AZ with automatic failover, providing primary and replica nodes in different Availability Zones. If the primary node fails, Redis automatically promotes a replica to primary without manual intervention.",
+    "source": "02-2026"
+  },
+  {
+    "id": 12,
+    "question": "A company is planning to migrate to AWS. The network layout will include more than 1,000 VPCs in a single AWS Region. The resources in the VPCs need to communicate with each other. What should a solutions architect recommend to meet these requirements?",
+    "options": [
+      { "key": "A", "text": "Create an AWS Direct Connect gateway, and attach a public virtual interface (VIF) to each VPC. Enable route propagation." },
+      { "key": "B", "text": "Create VPN tunnels from all the VPCs to each other. Enable route propagation." },
+      { "key": "C", "text": "Peer all the VPCs together by creating and accepting peering requests. Update route tables with the new routes." },
+      { "key": "D", "text": "Create a transit gateway, and place attachments in subnets of all the VPCs. Configure a transit gateway route table with the new routes." }
+    ],
+    "correct": ["D"],
+    "multi": false,
+    "explanation": "An AWS Transit Gateway allows thousands of VPCs to connect through a central hub, simplifying network management and routing. It enables scalable, efficient inter-VPC communication without the complexity of multiple peering connections.",
+    "source": "02-2026"
+  },
+  {
+    "id": 13,
+    "question": "A SaaS company runs a multi-tenant data lake by using Amazon S3. Each tenant's data is stored in an isolated data path in an S3 bucket. The company wants to allow tenants to use their own keys to encrypt only a subset of their data. The rest uses SSE-S3. The company needs ongoing replication to another S3 bucket in a different AWS Region for objects encrypted with imported keys. Which solution will meet these requirements?",
+    "options": [
+      { "key": "A", "text": "Use S3 prefixes for each tenant's data. Use SSE-KMS. Use tags to set up tag-based Cross-Region Replication (CRR) to another S3 bucket." },
+      { "key": "B", "text": "Use S3 prefixes for each tenant's data. Use SSE-C. Set up prefix-based Cross-Region Replication (CRR) to another S3 bucket." },
+      { "key": "C", "text": "Use S3 prefixes for each tenant's data. Use SSE-KMS. Set up prefix-based Cross-Region Replication (CRR) to another S3 bucket." },
+      { "key": "D", "text": "Create a separate S3 bucket for each tenant. Use SSE-C. Set up bucket-level Cross-Region Replication (CRR)." }
+    ],
+    "correct": ["C"],
+    "multi": false,
+    "explanation": "SSE-KMS allows tenants to use their own KMS keys for a subset of data. SSE-KMS-encrypted objects support Cross-Region Replication configurable using prefixes. SSE-C cannot be used with CRR.",
+    "source": "02-2026"
+  },
+  {
+    "id": 14,
+    "question": "A solutions architect needs to build a log storage solution for a client. The application typically produces 50 GB of logs each day. The client needs a storage solution that makes the logs available for occasional querying and analytics. Which solution will meet this requirement?",
+    "options": [
+      { "key": "A", "text": "Store user activity logs in an Amazon S3 bucket. Use Amazon Athena to perform queries and analytics." },
+      { "key": "B", "text": "Store user activity logs in an Amazon OpenSearch Service cluster. Use OpenSearch Dashboards to perform queries and analytics." },
+      { "key": "C", "text": "Store user activity logs in an Amazon RDS instance. Use an ODBC connector to perform queries and analytics." },
+      { "key": "D", "text": "Store user activity logs in an Amazon CloudWatch Logs log group. Use CloudWatch Logs Insights to perform queries and analytics." }
+    ],
+    "correct": ["A"],
+    "multi": false,
+    "explanation": "For infrequent or ad hoc querying of log data, Amazon S3 + Amazon Athena provides the most cost-effective, serverless, and scalable analytics solution without needing to provision infrastructure.",
+    "source": "02-2026"
+  },
+  {
+    "id": 15,
+    "question": "A company experienced a breach in its on-premises network. The attacker launched port scanning, waged an outbound DoS attack, and performed cryptocurrency mining. The company is moving to AWS to build a more resilient architecture that monitors and remediates these types of attacks at the account level. How should the company use AWS services to meet these requirements?",
+    "options": [
+      { "key": "A", "text": "Enable Amazon GuardDuty to generate findings. Invoke AWS Lambda for automated remediation of identified threats." },
+      { "key": "B", "text": "Enable AWS Config and configure policies to monitor against breaches. Invoke AWS Lambda for automated remediation of noncompliant resources." },
+      { "key": "C", "text": "Enable Amazon Macie to identify and classify security threats. Configure events in Amazon EventBridge to invoke actions based on the severity of threats." },
+      { "key": "D", "text": "Enable Amazon Inspector to generate assessment reports. Configure events in Amazon EventBridge to invoke actions based on identified threats." }
+    ],
+    "correct": ["A"],
+    "multi": false,
+    "explanation": "Amazon GuardDuty continuously monitors for malicious behavior such as port scanning, DoS activity, and cryptocurrency mining. Findings can trigger AWS Lambda functions for automated remediation at the account level.",
+    "source": "02-2026"
+  },
+  {
+    "id": 16,
+    "question": "A disaster response team is using drones to collect images of recent storm damage. The team's laptops lack the storage and compute capacity to process the data. Network connectivity is intermittent and unreliable. The images need to be processed to evaluate the damage. What should a solutions architect recommend?",
+    "options": [
+      { "key": "A", "text": "Use AWS Snowball Edge devices to process and store the images." },
+      { "key": "B", "text": "Upload the images to Amazon SQS during intermittent connectivity to EC2 instances." },
+      { "key": "C", "text": "Configure Amazon Data Firehose to create multiple delivery streams aimed at the S3 buckets for storage and EC2 instances for processing." },
+      { "key": "D", "text": "Use AWS Storage Gateway pre-installed on a hardware appliance to cache the images locally for Amazon S3 to process when connectivity becomes available." }
+    ],
+    "correct": ["A"],
+    "multi": false,
+    "explanation": "AWS Snowball Edge is designed for use cases with limited or unreliable network connectivity. It enables local data transfer and compute processing at edge locations using Amazon EC2-compatible resources.",
+    "source": "02-2026"
+  },
+  {
+    "id": 17,
+    "question": "A company plans to store sensitive user data on Amazon S3. Internal security compliance requirements mandate encryption of data before sending it to Amazon S3. What should a solutions architect recommend to satisfy these requirements?",
+    "options": [
+      { "key": "A", "text": "Server-side encryption with customer-provided encryption keys (SSE-C)." },
+      { "key": "B", "text": "Client-side encryption with Amazon S3 managed encryption keys." },
+      { "key": "C", "text": "Server-side encryption with keys stored in AWS Key Management Service (SSE-KMS)." },
+      { "key": "D", "text": "Client-side encryption with a key stored in AWS Key Management Service (AWS KMS)." }
+    ],
+    "correct": ["C"],
+    "multi": false,
+    "explanation": "SSE-KMS gives full key usage auditing through AWS CloudTrail, integrates with AWS KMS, and provides compliance-friendly encryption at rest automatically without additional operational overhead.",
+    "source": "02-2026"
+  },
+  {
+    "id": 18,
+    "question": "A company stores medical reports and images in Amazon S3 Standard storage. The company accesses each medical report only once each year but must access them in real time when necessary. The company rarely accesses medical images but must retain each image for 7 years and can tolerate flexible retrieval times. The company wants to optimize storage costs. Which solution will meet this requirement MOST cost-effectively?",
+    "options": [
+      { "key": "A", "text": "Store the medical reports and images in S3 Glacier Deep Archive." },
+      { "key": "B", "text": "Store the medical reports in S3 Glacier Instant Retrieval. Store the medical images in S3 Glacier Deep Archive." },
+      { "key": "C", "text": "Store the medical reports in S3 Intelligent-Tiering. Store the medical images in S3 Glacier Deep Archive." },
+      { "key": "D", "text": "Store the medical reports in S3 Glacier Flexible Retrieval. Store the medical images in S3 Glacier Deep Archive." }
+    ],
+    "correct": ["B"],
+    "multi": false,
+    "explanation": "S3 Glacier Instant Retrieval is ideal for medical reports accessed very rarely but requiring immediate availability. S3 Glacier Deep Archive is most cost-effective for medical images retained for 7 years with flexible retrieval requirements.",
+    "source": "02-2026"
+  },
+  {
+    "id": 19,
+    "question": "A company runs a serverless architecture that supports multiple projects and resources in the company's AWS account. The company wants to use resource tags to monitor and analyze costs contributed by individual projects to the company's AWS bill. Which solution will meet these requirements?",
+    "options": [
+      { "key": "A", "text": "Use AWS Budgets to set budgets for each project based on the tags assigned to resources." },
+      { "key": "B", "text": "Use AWS Billing Conductor to configure reports for each project based on the tags assigned to resources." },
+      { "key": "C", "text": "Use AWS Pricing Calculator to model cost reports for each project based on the tags assigned to resources." },
+      { "key": "D", "text": "Use AWS Cost Explorer to create custom cost allocation reports based on the tags assigned to resources." }
+    ],
+    "correct": ["D"],
+    "multi": false,
+    "explanation": "AWS Cost Explorer allows analyzing and reporting AWS costs based on resource tags. By activating cost allocation tags, you can create custom cost reports grouped by project showing each project's contribution to the bill.",
+    "source": "02-2026"
+  },
+  {
+    "id": 20,
+    "question": "A company generates SSL certificates from a third-party provider and imports them into AWS Certificate Manager (ACM). A solutions architect must notify the company's security team 30 days before an imported certificate expires. The company already has an Amazon SQS queue and an Amazon SNS topic with the security team's email as a subscriber. Which solution will provide the required notification?",
+    "options": [
+      { "key": "A", "text": "Create an AWS Lambda function to scan for expiring certificates. Deliver a JSON message to the SQS queue." },
+      { "key": "B", "text": "Create an AWS Lambda function to scan for expiring certificates. Deliver a JSON message to the SNS topic." },
+      { "key": "C", "text": "Create an Amazon EventBridge rule that specifies the ACM Certificate Approaching Expiration event type. Set the SQS queue as the rule's target." },
+      { "key": "D", "text": "Create an Amazon EventBridge rule that specifies the ACM Certificate Approaching Expiration event type. Set the SNS topic as the rule's target." }
+    ],
+    "correct": ["D"],
+    "multi": false,
+    "explanation": "Amazon EventBridge detects the ACM Certificate Approaching Expiration event. Setting the existing SNS topic as the rule's target automatically sends email notifications to the security team 30 days before expiry with minimal operational overhead.",
+    "source": "02-2026"
+  },
+  {
+    "id": 21,
+    "question": "A company is developing a platform to process large volumes of data for complex analytics and machine learning (ML) tasks. The platform must handle compute-intensive workloads that currently require 20 to 30 minutes for each data processing step. The company wants a solution to accelerate data processing. Which solution will meet these requirements with the LEAST operational overhead?",
+    "options": [
+      { "key": "A", "text": "Deploy three Amazon EC2 instances across three Availability Zones. Use traditional batch processing techniques for data processing." },
+      { "key": "B", "text": "Create an Amazon EMR cluster. Use managed scaling. Install Apache Spark to assist with data processing." },
+      { "key": "C", "text": "Create a series of AWS Lambda functions to process the data. Deploy an Amazon SQS queue to relay data between Lambda functions." },
+      { "key": "D", "text": "Create an AWS Lambda function for each data processing step. Use AWS Step Functions to orchestrate the Lambda functions into data processing steps." }
+    ],
+    "correct": ["B"],
+    "multi": false,
+    "explanation": "Amazon EMR with Apache Spark is ideal for distributed compute-intensive data transformations. Managed scaling dynamically adjusts cluster resources. Lambda has execution time and memory limits unsuitable for 30-minute compute-intensive tasks.",
+    "source": "02-2026"
+  }
+]

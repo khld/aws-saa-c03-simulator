@@ -66,6 +66,21 @@
   .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; text-align: center; }
   .stat-card .num { font-size: 2rem; font-weight: 800; color: var(--accent); }
   .stat-card .label { font-size: 0.8rem; color: var(--text2); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  /* Question set selector */
+  .set-selector { margin-bottom: 32px; }
+  .set-selector h3 { font-size: 0.85rem; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
+  .set-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; }
+  .set-btn {
+    background: var(--surface); border: 2px solid var(--border); border-radius: 10px;
+    padding: 12px 10px; cursor: pointer; transition: all 0.2s; text-align: center; color: var(--text);
+    font-size: 0.9rem; font-weight: 600;
+  }
+  .set-btn:hover { border-color: var(--accent); background: var(--card); }
+  .set-btn.selected { border-color: var(--accent); background: rgba(79,142,247,0.12); color: var(--accent); }
+  .set-btn .set-sub { font-size: 0.72rem; color: var(--text2); font-weight: 400; margin-top: 3px; }
+  .set-btn.selected .set-sub { color: var(--accent); opacity: 0.7; }
+
   .mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 32px; }
   .mode-card { background: var(--surface); border: 2px solid var(--border); border-radius: var(--radius); padding: 24px; cursor: pointer; transition: all 0.2s; text-align: left; }
   .mode-card:hover, .mode-card.selected { border-color: var(--accent); background: var(--card); }
@@ -89,6 +104,7 @@
   .badge { padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.3px; }
   .badge-blue { background: rgba(79,142,247,0.15); color: var(--accent); border: 1px solid rgba(79,142,247,0.3); }
   .badge-purple { background: rgba(124,58,237,0.15); color: #a78bfa; border: 1px solid rgba(124,58,237,0.3); }
+  .badge-green { background: rgba(34,197,94,0.15); color: var(--success); border: 1px solid rgba(34,197,94,0.3); }
   .question-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 20px; }
   .question-text { font-size: 1.05rem; line-height: 1.7; color: var(--text); }
   .options-list { display: flex; flex-direction: column; gap: 10px; }
@@ -150,6 +166,7 @@
   /* Responsive */
   @media (max-width: 600px) {
     .mode-grid { grid-template-columns: 1fr; }
+    .set-grid { grid-template-columns: repeat(2, 1fr); }
     .hero h1 { font-size: 1.6rem; }
   }
 </style>
@@ -164,15 +181,15 @@
 
 <!-- Error screen -->
 <div id="error-screen">
-  <p id="error-msg">❌ Could not load questions.json</p>
+  <p id="error-msg">&#10060; Could not load questions</p>
   <button onclick="loadQuestions()">Retry</button>
 </div>
 
 <!-- Main app (shown after questions load) -->
 <div id="app">
   <header>
-    <div class="logo">☁️ AWS SAA-C03</div>
-    <div class="timer-badge" id="timer-badge" style="display:none">⏱ <span id="timer-display">--:--</span></div>
+    <div class="logo">&#9729;&#65039; AWS SAA-C03</div>
+    <div class="timer-badge" id="timer-badge" style="display:none">&#9201; <span id="timer-display">--:--</span></div>
   </header>
 
   <!-- Home -->
@@ -180,20 +197,29 @@
     <div class="hero">
       <h1>AWS SAA-C03 Simulator</h1>
       <p>Practice with real exam-style questions. Test your knowledge, track your progress.</p>
+
       <div class="stats-grid" id="home-stats"></div>
+
+      <!-- Question Set Selector -->
+      <div class="set-selector">
+        <h3>&#128196; Question Set</h3>
+        <div class="set-grid" id="set-grid"></div>
+      </div>
+
+      <!-- Mode selector -->
       <div class="mode-grid">
         <div class="mode-card selected" onclick="selectMode('practice')" id="mode-practice">
-          <div class="mode-icon">📚</div>
+          <div class="mode-icon">&#128218;</div>
           <h3>Practice Mode</h3>
           <p>Instant feedback after each answer with explanations.</p>
         </div>
         <div class="mode-card" onclick="selectMode('exam')" id="mode-exam">
-          <div class="mode-icon">🎯</div>
+          <div class="mode-icon">&#127919;</div>
           <h3>Exam Mode</h3>
           <p>130-minute timed exam, results shown at the end.</p>
         </div>
       </div>
-      <button class="btn btn-primary" onclick="startQuiz()">▶ Start Simulator</button>
+      <button class="btn btn-primary" onclick="startQuiz()">&#9654; Start Simulator</button>
     </div>
   </div>
 
@@ -213,17 +239,17 @@
       </div>
       <div class="options-list" id="options-list"></div>
       <div class="explanation-box" id="explanation-box">
-        <div class="explanation-label">💡 Explanation</div>
+        <div class="explanation-label">&#128161; Explanation</div>
         <div id="explanation-text"></div>
       </div>
       <div class="nav-bar">
         <div class="nav-left">
-          <button class="btn btn-secondary" id="btn-prev" onclick="navigate(-1)">← Prev</button>
+          <button class="btn btn-secondary" id="btn-prev" onclick="navigate(-1)">&larr; Prev</button>
         </div>
         <div class="nav-right">
-          <button class="btn btn-secondary" id="btn-submit" onclick="submitAnswer()" style="display:none">✓ Submit</button>
-          <button class="btn btn-primary" id="btn-next" onclick="navigate(1)">Next →</button>
-          <button class="btn btn-primary" id="btn-finish" onclick="finishQuiz()" style="display:none">🏁 Finish</button>
+          <button class="btn btn-secondary" id="btn-submit" onclick="submitAnswer()" style="display:none">&#10003; Submit</button>
+          <button class="btn btn-primary" id="btn-next" onclick="navigate(1)">Next &rarr;</button>
+          <button class="btn btn-primary" id="btn-finish" onclick="finishQuiz()" style="display:none">&#127937; Finish</button>
         </div>
       </div>
     </div>
@@ -242,8 +268,8 @@
       </div>
       <div class="results-grid" id="results-grid"></div>
       <div style="display:flex;gap:12px;justify-content:center;margin-bottom:32px;">
-        <button class="btn btn-primary" onclick="reviewAnswers()">📋 Review Answers</button>
-        <button class="btn btn-secondary" onclick="goHome()">🏠 Home</button>
+        <button class="btn btn-primary" onclick="reviewAnswers()">&#128203; Review Answers</button>
+        <button class="btn btn-secondary" onclick="goHome()">&#127968; Home</button>
       </div>
       <div id="review-section" style="display:none;">
         <h3 style="margin-bottom:12px;">Answer Review</h3>
@@ -254,41 +280,75 @@
 </div>
 
 <script>
+// ── Question sets config ──────────────────────────────────────────────────────
+const QUESTION_SETS = [
+  { id: 'all',      label: '&#127807; All Sets',  sub: 'All questions',  file: 'questions.json' },
+  { id: '02-2026',  label: '02-2026',              sub: 'Feb 2026 · 21 Q', file: 'questions-02-2026.json' },
+  { id: '03-2025',  label: '03-2025',              sub: 'Mar 2025 · Q1191+', file: 'questions-03-2025.json' },
+  { id: '05-2025',  label: '05-2025',              sub: 'May 2025 · Q1294+', file: 'questions-05-2025.json' }
+];
+
 let ALL_QUESTIONS = [];
 let questions = [];
 let current = 0;
 let answers = {};
 let mode = 'practice';
+let selectedSet = 'all';
 let timerInterval = null;
 let secondsLeft = 0;
 
-// ── Load questions from JSON file ─────────────────────────────────────────────
+// ── Boot ──────────────────────────────────────────────────────────────────────
+function boot() {
+  renderSetButtons();
+  loadQuestions();
+}
+
+// ── Render set buttons ────────────────────────────────────────────────────────
+function renderSetButtons() {
+  const grid = document.getElementById('set-grid');
+  grid.innerHTML = QUESTION_SETS.map(s => `
+    <button class="set-btn${s.id === selectedSet ? ' selected' : ''}" onclick="selectSet('${s.id}')">
+      ${s.label}
+      <div class="set-sub">${s.sub}</div>
+    </button>`).join('');
+}
+
+function selectSet(id) {
+  selectedSet = id;
+  renderSetButtons();
+  loadQuestions();
+}
+
+// ── Load questions ────────────────────────────────────────────────────────────
 async function loadQuestions() {
+  const setConfig = QUESTION_SETS.find(s => s.id === selectedSet);
   document.getElementById('loading-screen').style.display = 'flex';
   document.getElementById('error-screen').style.display = 'none';
   document.getElementById('app').style.display = 'none';
 
   try {
-    const resp = await fetch('questions.json');
-    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const resp = await fetch(setConfig.file);
+    if (!resp.ok) throw new Error(`HTTP ${resp.status} — ${setConfig.file} not found`);
     ALL_QUESTIONS = await resp.json();
     document.getElementById('loading-screen').style.display = 'none';
     document.getElementById('app').style.display = 'block';
     renderHomeStats();
+    renderSetButtons();
   } catch (err) {
     document.getElementById('loading-screen').style.display = 'none';
     document.getElementById('error-screen').style.display = 'flex';
-    document.getElementById('error-msg').textContent = '\u274c ' + err.message + ' — Make sure questions.json is in the same directory.';
+    document.getElementById('error-msg').textContent = '\u274c ' + err.message;
   }
 }
 
 function renderHomeStats() {
+  const setConfig = QUESTION_SETS.find(s => s.id === selectedSet);
   const el = document.getElementById('home-stats');
   el.innerHTML = `
     <div class="stat-card"><div class="num">${ALL_QUESTIONS.length}</div><div class="label">Questions</div></div>
     <div class="stat-card"><div class="num">130</div><div class="label">Exam Minutes</div></div>
     <div class="stat-card"><div class="num">72%</div><div class="label">Pass Score</div></div>
-    <div class="stat-card"><div class="num">SAA-C03</div><div class="label">Exam Code</div></div>`;
+    <div class="stat-card"><div class="num">${setConfig.id === 'all' ? 'All' : setConfig.id}</div><div class="label">Active Set</div></div>`;
 }
 
 function selectMode(m) {
@@ -310,7 +370,7 @@ function startQuiz() {
   renderQuestion();
 }
 
-// ── Timer ─────────────────────────────────────────────────────────────────
+// ── Timer ─────────────────────────────────────────────────────────────────────
 function startTimer() {
   const badge = document.getElementById('timer-badge');
   const display = document.getElementById('timer-display');
@@ -325,7 +385,7 @@ function startTimer() {
   }, 1000);
 }
 
-// ── Render question ─────────────────────────────────────────────────────
+// ── Render question ───────────────────────────────────────────────────────────
 function renderQuestion() {
   const q = questions[current];
   const total = questions.length;
@@ -336,8 +396,10 @@ function renderQuestion() {
   document.getElementById('progress-fill').style.width = pct + '%';
 
   const meta = document.getElementById('question-meta');
-  meta.innerHTML = `<span class="badge badge-blue">Q${q.id}</span>` +
-    (q.multi ? '<span class="badge badge-purple">Multiple Answer</span>' : '');
+  meta.innerHTML =
+    `<span class="badge badge-blue">Q${q.id}</span>` +
+    (q.source ? `<span class="badge badge-green">${q.source}</span>` : '') +
+    (q.multi   ? '<span class="badge badge-purple">Multiple Answer</span>' : '');
 
   document.getElementById('question-text').textContent = q.question;
 
@@ -352,9 +414,9 @@ function renderQuestion() {
     btn.dataset.key = opt.key;
 
     if (revealed) {
-      const isCorrect = q.correct.includes(opt.key);
+      const isCorrect  = q.correct.includes(opt.key);
       const isSelected = saved.includes(opt.key);
-      if (isCorrect && isSelected) btn.classList.add('correct');
+      if (isCorrect && isSelected)  btn.classList.add('correct');
       else if (!isCorrect && isSelected) btn.classList.add('incorrect');
       else if (isCorrect && !isSelected) btn.classList.add('missed');
       btn.disabled = true;
@@ -379,7 +441,7 @@ function renderQuestion() {
   const isLast = current === total - 1;
   const canSubmit = mode === 'practice' && (answers[current] || []).length > 0 && !revealed;
   document.getElementById('btn-submit').style.display = canSubmit ? 'inline-flex' : 'none';
-  document.getElementById('btn-next').style.display = isLast ? 'none' : 'inline-flex';
+  document.getElementById('btn-next').style.display   = isLast ? 'none' : 'inline-flex';
   document.getElementById('btn-finish').style.display = isLast ? 'inline-flex' : 'none';
 }
 
@@ -405,7 +467,7 @@ function toggleOption(key) {
 }
 
 function submitAnswer() { revealAnswer(); }
-function revealAnswer() { renderQuestion(); }
+function revealAnswer()  { renderQuestion(); }
 function navigate(dir) {
   current = Math.max(0, Math.min(questions.length - 1, current + dir));
   renderQuestion();
@@ -417,7 +479,7 @@ function finishQuiz() {
   showResults();
 }
 
-// ── Results ─────────────────────────────────────────────────────────────────
+// ── Results ───────────────────────────────────────────────────────────────────
 function showResults() {
   showScreen('screen-results');
   let correct = 0, incorrect = 0, skipped = 0;
@@ -429,14 +491,14 @@ function showResults() {
   });
 
   const total = questions.length;
-  const pct = Math.round((correct / total) * 100);
-  const pass = pct >= 72;
+  const pct   = Math.round((correct / total) * 100);
+  const pass  = pct >= 72;
 
   const circle = document.getElementById('score-circle');
   circle.className = 'score-circle ' + (pass ? 'pass' : 'fail');
-  document.getElementById('score-pct').textContent = pct + '%';
-  document.getElementById('result-title').textContent = pass ? '🎉 Congratulations! You Passed!' : '📖 Keep Studying!';
-  document.getElementById('result-subtitle').textContent = `${correct}/${total} correct — Pass threshold: 72%`;
+  document.getElementById('score-pct').textContent      = pct + '%';
+  document.getElementById('result-title').textContent   = pass ? '\uD83C\uDF89 Congratulations! You Passed!' : '\uD83D\uDCDA Keep Studying!';
+  document.getElementById('result-subtitle').textContent = `${correct}/${total} correct \u2014 Pass threshold: 72%`;
 
   document.getElementById('results-grid').innerHTML = `
     <div class="result-stat"><div class="num green">${correct}</div><div class="lbl">Correct</div></div>
@@ -462,7 +524,7 @@ function reviewAnswers() {
         <span class="badge badge-blue">Q${q.id}</span>
         <span class="dot ${isCorrect ? 'green' : 'red'}"></span>
       </div>
-      <h4>${q.question.substring(0, 100)}…</h4>
+      <h4>${q.question.substring(0, 100)}\u2026</h4>
       <p style="font-size:0.8rem;color:var(--text2);margin-top:6px;">
         Your answer: <strong>${sel.join(', ') || 'None'}</strong> | Correct: <strong>${q.correct.join(', ')}</strong>
       </p>`;
@@ -483,7 +545,7 @@ function showScreen(id) {
 }
 
 // Boot
-loadQuestions();
+boot();
 </script>
 </body>
 </html>
