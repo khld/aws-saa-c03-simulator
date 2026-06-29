@@ -80,6 +80,8 @@
   .set-btn.selected { border-color: var(--accent); background: rgba(79,142,247,0.12); color: var(--accent); }
   .set-btn .set-sub { font-size: 0.72rem; color: var(--text2); font-weight: 400; margin-top: 3px; }
   .set-btn.selected .set-sub { color: var(--accent); opacity: 0.7; }
+  .set-btn.unavailable { opacity: 0.45; cursor: not-allowed; }
+  .set-btn.unavailable:hover { border-color: var(--border); background: var(--surface); }
 
   .mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 32px; }
   .mode-card { background: var(--surface); border: 2px solid var(--border); border-radius: var(--radius); padding: 24px; cursor: pointer; transition: all 0.2s; text-align: left; }
@@ -281,11 +283,12 @@
 
 <script>
 // ── Question sets config ──────────────────────────────────────────────────────
+// Each entry maps to a versioned JSON file: SAA-C03_MM-YYYY.json
+// Add new versions here as they become available.
 const QUESTION_SETS = [
-  { id: 'all',      label: '&#127807; All Sets',  sub: 'All questions',  file: 'questions.json' },
-  { id: '02-2026',  label: '02-2026',              sub: 'Feb 2026 · 21 Q', file: 'questions-02-2026.json' },
-  { id: '03-2025',  label: '03-2025',              sub: 'Mar 2025 · Q1191+', file: 'questions-03-2025.json' },
-  { id: '05-2025',  label: '05-2025',              sub: 'May 2025 · Q1294+', file: 'questions-05-2025.json' }
+  { id: '02-2026',  label: '02-2026',  sub: 'Feb 2026 · 21 Q',    file: 'questions-02-2026.json' },
+  { id: '03-2025',  label: '03-2025',  sub: 'Mar 2025 · Q1191+',  file: 'questions-03-2025.json', comingSoon: true },
+  { id: '05-2025',  label: '05-2025',  sub: 'May 2025 · Q1294+',  file: 'questions-05-2025.json', comingSoon: true }
 ];
 
 let ALL_QUESTIONS = [];
@@ -293,7 +296,7 @@ let questions = [];
 let current = 0;
 let answers = {};
 let mode = 'practice';
-let selectedSet = 'all';
+let selectedSet = '02-2026';
 let timerInterval = null;
 let secondsLeft = 0;
 
@@ -306,14 +309,22 @@ function boot() {
 // ── Render set buttons ────────────────────────────────────────────────────────
 function renderSetButtons() {
   const grid = document.getElementById('set-grid');
-  grid.innerHTML = QUESTION_SETS.map(s => `
-    <button class="set-btn${s.id === selectedSet ? ' selected' : ''}" onclick="selectSet('${s.id}')">
+  grid.innerHTML = QUESTION_SETS.map(s => {
+    const isSelected = s.id === selectedSet;
+    const unavailable = s.comingSoon === true;
+    const classes = ['set-btn', isSelected ? 'selected' : '', unavailable ? 'unavailable' : ''].filter(Boolean).join(' ');
+    const onclick = unavailable ? '' : `onclick="selectSet('${s.id}')"` ;
+    const subLabel = unavailable ? 'Coming soon' : s.sub;
+    return `<button class="${classes}" ${onclick} ${unavailable ? 'disabled title="JSON file not yet uploaded"' : ''}>
       ${s.label}
-      <div class="set-sub">${s.sub}</div>
-    </button>`).join('');
+      <div class="set-sub">${subLabel}</div>
+    </button>`;
+  }).join('');
 }
 
 function selectSet(id) {
+  const set = QUESTION_SETS.find(s => s.id === id);
+  if (!set || set.comingSoon) return;
   selectedSet = id;
   renderSetButtons();
   loadQuestions();
@@ -348,7 +359,7 @@ function renderHomeStats() {
     <div class="stat-card"><div class="num">${ALL_QUESTIONS.length}</div><div class="label">Questions</div></div>
     <div class="stat-card"><div class="num">130</div><div class="label">Exam Minutes</div></div>
     <div class="stat-card"><div class="num">72%</div><div class="label">Pass Score</div></div>
-    <div class="stat-card"><div class="num">${setConfig.id === 'all' ? 'All' : setConfig.id}</div><div class="label">Active Set</div></div>`;
+    <div class="stat-card"><div class="num">${setConfig.id}</div><div class="label">Active Set</div></div>`;
 }
 
 function selectMode(m) {
