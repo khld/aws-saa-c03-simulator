@@ -283,8 +283,6 @@
 
 <script>
 // ── Question sets config ──────────────────────────────────────────────────────
-// Each entry maps to a versioned JSON file.
-// Remove comingSoon: true once the JSON file is uploaded to the repo.
 const QUESTION_SETS = [
   { id: '02-2026',  label: '02-2026',  sub: 'Feb 2026 · 21 Q',   file: 'questions-02-2026.json' },
   { id: '03-2025',  label: '03-2025',  sub: 'Mar 2025 · 32 Q',   file: 'questions-03-2025.json' },
@@ -295,6 +293,8 @@ let ALL_QUESTIONS = [];
 let questions = [];
 let current = 0;
 let answers = {};
+// revealed tracks which question indices have been submitted/revealed in practice mode
+let revealed = {};
 let mode = 'practice';
 let selectedSet = '02-2026';
 let timerInterval = null;
@@ -341,7 +341,6 @@ async function loadQuestions() {
     const resp = await fetch(setConfig.file);
     if (!resp.ok) throw new Error(`HTTP ${resp.status} — ${setConfig.file} not found`);
     const data = await resp.json();
-    // Support both flat array and { questions: [...] } formats
     ALL_QUESTIONS = Array.isArray(data) ? data : (data.questions || data);
     document.getElementById('loading-screen').style.display = 'none';
     document.getElementById('app').style.display = 'block';
@@ -372,7 +371,7 @@ function selectMode(m) {
 
 function startQuiz() {
   questions = [...ALL_QUESTIONS].sort(() => Math.random() - 0.5);
-  current = 0; answers = {};
+  current = 0; answers = {}; revealed = {};
   showScreen('screen-quiz');
   if (mode === 'exam') {
     secondsLeft = 130 * 60;
@@ -408,18 +407,20 @@ function renderQuestion() {
   document.getElementById('progress-pct').textContent = pct + '%';
   document.getElementById('progress-fill').style.width = pct + '%';
 
+  const isMulti = q.multi || q.multiple;
+
   const meta = document.getElementById('question-meta');
   meta.innerHTML =
     `<span class="badge badge-blue">Q${q.id}</span>` +
     (q.source ? `<span class="badge badge-green">${q.source}</span>` : '') +
-    (q.multi || q.multiple ? '<span class="badge badge-purple">Multiple Answer</span>' : '');
+    (isMulti ? '<span class="badge badge-purple">Multiple Answer</span>' : '');
 
   document.getElementById('question-text').textContent = q.question;
 
   const ol = document.getElementById('options-list');
   ol.innerHTML = '';
   const saved = answers[current] || [];
-  const revealed = mode === 'practice' && saved.length > 0;
+  const isRevealed = mode === 'practice' && revealed[current];
 
   // Support both array and object option formats
   const opts = Array.isArray(q.options)
@@ -431,7 +432,7 @@ function renderQuestion() {
     btn.className = 'option-btn';
     btn.dataset.key = opt.key;
 
-    if (revealed) {
+    if (isRevealed) {
       const isCorrect  = q.correct.includes(opt.key);
       const isSelected = saved.includes(opt.key);
       if (isCorrect && isSelected)  btn.classList.add('correct');
@@ -448,7 +449,7 @@ function renderQuestion() {
   });
 
   const expBox = document.getElementById('explanation-box');
-  if (revealed && q.explanation) {
+  if (isRevealed && q.explanation) {
     document.getElementById('explanation-text').textContent = q.explanation;
     expBox.classList.add('visible');
   } else {
@@ -457,7 +458,9 @@ function renderQuestion() {
 
   document.getElementById('btn-prev').disabled = current === 0;
   const isLast = current === total - 1;
-  const canSubmit = mode === 'practice' && (answers[current] || []).length > 0 && !revealed;
+
+  // Show Submit button when: practice mode, answer(s) selected, not yet revealed
+  const canSubmit = mode === 'practice' && saved.length > 0 && !isRevealed;
   document.getElementById('btn-submit').style.display = canSubmit ? 'inline-flex' : 'none';
   document.getElementById('btn-next').style.display   = isLast ? 'none' : 'inline-flex';
   document.getElementById('btn-finish').style.display = isLast ? 'inline-flex' : 'none';
@@ -467,17 +470,27 @@ function toggleOption(key) {
   const q = questions[current];
   let sel = answers[current] ? [...answers[current]] : [];
   const isMulti = q.multi || q.multiple;
+
   if (isMulti) {
+    // For multiple-answer: toggle selection, never auto-reveal
     sel.includes(key) ? sel.splice(sel.indexOf(key), 1) : sel.push(key);
+    answers[current] = sel;
+    renderQuestion();
   } else {
-    sel = sel.includes(key) ? [] : [key];
+    // For single-answer: select and immediately reveal
+    sel = [key];
+    answers[current] = sel;
+    revealed[current] = true;
+    renderQuestion();
   }
-  answers[current] = sel;
-  renderQuestion();
 }
 
 function submitAnswer() {
-  renderQuestion();
+  // Mark current question as revealed (used for multi-answer questions)
+  if ((answers[current] || []).length > 0) {
+    revealed[current] = true;
+    renderQuestion();
+  }
 }
 
 function navigate(dir) {
@@ -533,7 +546,7 @@ function reviewAnswers() {
 
 function goHome() {
   clearInterval(timerInterval);
-  answers = {}; current = 0;
+  answers = {}; current = 0; revealed = {};
   showScreen('screen-home');
 }
 
